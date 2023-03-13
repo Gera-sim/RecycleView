@@ -31,7 +31,7 @@ class UsersAdapter(
         val user = v.tag as User
         when (v.id) {
             R.id.moreImageViewButton -> {
-showPopupMenu(v)
+                showPopupMenu(v)
 
             }
             else -> {
@@ -68,34 +68,49 @@ showPopupMenu(v)
                     .error(R.drawable.ic_user_avatar)
                     .into(photoImageView)
             } else {
+                Glide.with(photoImageView.context).clear(photoImageView)
                 photoImageView.setImageResource(R.drawable.ic_user_avatar)
             }
         }
     }
-    private fun showPopupMenu(view: View){
+
+    private fun showPopupMenu(view: View) {
         val popupMenu = PopupMenu(view.context, view)
         val context = view.context
+        val user = view.tag as User
+        val position = users.indexOfFirst { it.id == user.id }
 
-        popupMenu.menu.add(0, ID_MOVE_UP, Menu.NONE, context.getString(R.string.MoveUp))
-        popupMenu.menu.add(0, ID_MOVE_DOWN, Menu.NONE, context.getString(R.string.MoveDown))
+        popupMenu.menu.add(0, ID_MOVE_UP, Menu.NONE, context.getString(R.string.Move_up)).apply {
+            isEnabled = position > 0
+        }
+        popupMenu.menu.add(0, ID_MOVE_DOWN, Menu.NONE, context.getString(R.string.Move_down)).apply {
+            isEnabled = position < users.size - 1
+        }
         popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, context.getString(R.string.remove))
 
         popupMenu.setOnMenuItemClickListener {
-            when (it.itemId){
-                ID_MOVE_UP ->{}
-                ID_MOVE_DOWN-> {}
-                ID_REMOVE ->{}
+            when (it.itemId) {
+                ID_MOVE_UP -> {
+                    actionListener.onUserMove(user, -1)
+                }
+                ID_MOVE_DOWN -> {
+                    actionListener.onUserMove(user, 1)
+                }
+                ID_REMOVE -> {
+                    actionListener.onUserDelete(user)
+                }
             }
+            return@setOnMenuItemClickListener true
+
         }
-
-
+        popupMenu.show()
     }
 
     class UsersViewHolder(
         val binding: ItemUserBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
-    companion object{
+    companion object {
         private const val ID_MOVE_UP = 1
         private const val ID_MOVE_DOWN = 2
         private const val ID_REMOVE = 3

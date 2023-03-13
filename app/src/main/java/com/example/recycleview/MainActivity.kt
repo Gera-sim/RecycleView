@@ -22,13 +22,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = UsersAdapter(object : UserActionListener{
+        adapter = UsersAdapter(object : UserActionListener {
             override fun onUserMove(user: User, moveBy: Int) {
-                TODO("Not yet implemented")
+                usersService.moveUser(user, moveBy)
             }
 
             override fun onUserDelete(user: User) {
-                TODO("Not yet implemented")
+                usersService.deleteUser(user)
             }
 
             override fun onUserDetails(user: User) {
@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
 
         usersService.addListener(usersListener)
-
     }
 
     override fun onDestroy() {
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         usersService.removeListener(usersListener)
     }
 
-    private val usersListener: UsersListener = { adapter.users = it }
-
-
+    private val usersListener: UsersListener = {
+        adapter.users = it
+    }
 }
