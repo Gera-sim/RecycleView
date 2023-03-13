@@ -25,6 +25,7 @@ class UsersService {
     fun deleteUser(user: User){
         val indexToDelete = users.indexOfFirst { it.id==user.id }
         users.removeAt(indexToDelete)
+        notifyChanges()
     }
 
 fun moveUser(user: User, moveBy : Int){
@@ -33,10 +34,12 @@ fun moveUser(user: User, moveBy : Int){
     val newIndex:Int = oldIndex+moveBy
     if (newIndex<0||newIndex>=users.size)return
     Collections.swap(users, oldIndex, newIndex)
+    notifyChanges()
 }
 
     fun addListener(listener:UsersListener){
         listeners.add(listener)
+        listener.invoke(users)
     }
 
 fun removeListener(listener: UsersListener){
@@ -44,6 +47,8 @@ fun removeListener(listener: UsersListener){
 }
 
     private fun notifyChanges() {
+listeners.forEach{it.invoke(users)}
+
 
     }
 
