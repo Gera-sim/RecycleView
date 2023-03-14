@@ -3,4 +3,6 @@
     <string name="Move_up">Move Up</string>
     <string name="Move_down">Move Down</string>
     <string name="remove">Remove</string>
+    <string name="fire">Fire</string>
+    <string name="unemployed">[Unemployed]</string>
 </resources>
